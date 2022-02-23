@@ -1,0 +1,10 @@
+{% extends "main.html.twig" %}
+
+{% block body %}
+    {{ include("post/post_sort_bar.html.twig") }}
+    {{ include("post/post_box.html.twig") }}
+{% endblock %}
+
+{% block footer_info %}
+    {{ include("search/search_menu_box.html.twig") }}
+{% endblock %}

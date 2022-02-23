@@ -1,0 +1,10 @@
+{% extends "main.html.twig" %}
+
+{% block body %}
+    {{ include("comment/comment_sort_bar.html.twig") }}
+    {{ include("comment/comment_box.html.twig") }}
+{% endblock %}
+
+{% block footer_info %}
+    {{ include("user/user_menu_box.html.twig") }}
+{% endblock %}

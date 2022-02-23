@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title> Poller Bear </title>
+
+    <link rel="icon" href="/img/icons/logo.png">
+
+    <link rel="stylesheet" href="/style/theme.css">
+    <link rel="stylesheet" href="/style/main.css">
+    <link rel="stylesheet" href="/style/dropdown.css">
+    <link rel="stylesheet" href="/style/header.css">
+    <link rel="stylesheet" href="/style/footer.css">
+    <link rel="stylesheet" href="/style/media.css">
+    <link rel="stylesheet" href="/style/post.css">
+    <link rel="stylesheet" href="/style/comment.css">
+    <link rel="stylesheet" href="/style/settings.css">
+    <link rel="stylesheet" href="/style/poll.css">
+    <link rel="stylesheet" href="/style/card.css">
+    <link rel="stylesheet" href="/style/profile.css">
+    <link rel="stylesheet" href="/style/page.css">
+    <link rel="stylesheet" href="/style/media_query.css">
+
+    <script src="/script/variables.js" charset="utf-8"></script>
+    <script src="/script/functions.js" charset="utf-8"></script>
+    <script src="/script/preload.js" charset="utf-8"></script>
+</head>
+<body>
+    <header class="theme-box header-main">
+        <a href="{{ path("home") }}" class="header-item">
+            <img class="invert-icon header-logo" src="/img/icons/logo.png">
+        </a>
+        <form method="GET" action="{{ path("search_posts") }}" style="display:inline">
+            <input class="main-input header-input" name="search" placeholder="search..." required>
+        </form>
+        <div class="float-right">
+            {% if app.user %}
+                <a class="header-item" href="{{ path("post_make") }}"> Post </a>
+            {% else %}
+                <a class="header-item" href="{{ path("login") }}"> Login </a>
+            {% endif %}
+            <div class="dropdown" tabindex="0">
+                <div class="dropdown-btn header-item">•&nbsp•&nbsp•</div>
+                <ul class="dropdown-cont position-right">
+                    <a href="{{ path("settings") }}"> <li class="dropdown-item"> Settings </li> </a>
+                    <li class="dropdown-item"> About </li>
+                    {% if app.user %}
+                        <a href="{{ path("logout") }}"> <li class="dropdown-item"> Logout </li> </a>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </header>
