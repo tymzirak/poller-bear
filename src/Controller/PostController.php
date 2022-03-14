@@ -15,13 +15,13 @@ class PostController extends AbstractController
     }
 
     #[Route("/post/make", name: "post_make", methods: ["GET"])]
-    public function post_make() : Response
+    public function postMake() : Response
     {
         return $this->render("post/make.html.twig");
     }
 
     #[Route("/post/edit", name: "post_edit", methods: ["GET"])]
-    public function post_edit() : Response
+    public function postEdit() : Response
     {
         return $this->render("post/make.html.twig");
     }

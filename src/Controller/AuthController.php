@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use App\Service\UserSignupService;
+use App\DTO\UserSignupRequestDTO;
 
 class AuthController extends AbstractController
 {
@@ -35,19 +36,18 @@ class AuthController extends AbstractController
     }
 
     #[Route("/signup/init", name: "signup_init", methods: ["POST"])]
-    public function signupInit(Request $request): Response
+    public function signupInit(UserSignupRequestDTO $request): Response
     {
-        $requestData = $request->request->all();
-
-        if (!$error = $this->userSignupService->getLastUserActionViolation($requestData)) {
+        try {
+            $this->userSignupService->attemptToSignupUser($request);
             return $this->redirect($this->generateUrl("login"));
+        } catch (BadRequestHttpException $error) {
+            return new Response($error->getMessage());
         }
-
-        return $this->render("auth/signup.html.twig", ["error" => $error]);
     }
 
     #[Route("/password/reset", name: "password_reset", methods: ["GET"])]
-    public function password_reset(): Response
+    public function passwordReset(): Response
     {
         return $this->render("auth/reset_password.html.twig");
     }

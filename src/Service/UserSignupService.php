@@ -3,58 +3,41 @@
 namespace App\Service;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use App\Entity\User;
 use App\Service\UserService;
+use App\Service\ViolationService;
+use App\DTO\UserSignupRequestDTO;
 
 class UserSignupService
 {
     private ManagerRegistry $doctrine;
+    private ViolationService $violationService;
 
     private UserService $userService;
 
-    public function __construct(ManagerRegistry $doctrine, UserService $userService)
-    {
+    public function __construct(
+        ManagerRegistry $doctrine,
+        ViolationService $violationService,
+        UserService $userService
+    ) {
         $this->doctrine = $doctrine;
+        $this->violationService = $violationService;
 
         $this->userService = $userService;
     }
 
-    public function getLastUserActionViolation(array $requestData): ?ConstraintViolation
+    public function attemptToSignupUser(UserSignupRequestDTO $userSignupRequestDTO)
     {
-        if ($violation = $this->getLastUserSignupRequestViolation($requestData)) {
-            return $violation;
-        }
-
         $user = new User();
-        $user = $this->setUserSignupProperties($requestData, $user);
+        $user = $this->setUserSignupProperties($userSignupRequestDTO, $user);
 
-        if ($violation = $this->userService->getLastUserEntityViolation($user)) {
-            return $violation;
+        if ($violation = $this->violationService->getLastViolation($user)) {
+            throw new BadRequestHttpException($violation->getMessage());
         }
 
         $this->signupUser($user);
-
-        return null;
-    }
-
-    private function getLastUserSignupRequestViolation(array $requestData): ?ConstraintViolation
-    {
-        if (
-            !$requestData["username"]
-            || !$requestData["email"]
-            || !$requestData["password"]
-            || !$requestData["password_repeat"]
-        ) {
-            return new ConstraintViolation("", "", [], null, "", null);
-        }
-
-        if ($requestData["password"] != $requestData["password_repeat"]) {
-            return new ConstraintViolation("Passwords do not match.", "", [], null, "", null);
-        }
-
-        return null;
     }
 
     private function signupUser(User $user)
@@ -66,11 +49,11 @@ class UserSignupService
         $entityManager->flush();
     }
 
-    private function setUserSignupProperties(array $requestData, User $user): User
+    private function setUserSignupProperties(UserSignupRequestDTO $userSignupRequestDTO, User $user): User
     {
-        $user->setUsername($requestData["username"]);
-        $user->setEmail($requestData["email"]);
-        $user->setPassword($requestData["password"]);
+        $user->setUsername($userSignupRequestDTO->username);
+        $user->setEmail($userSignupRequestDTO->email);
+        $user->setPassword($userSignupRequestDTO->password);
 
         return $user;
     }

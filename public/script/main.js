@@ -6,9 +6,9 @@ if (userEditForm && userEditError)
 
         await getFormRequestResponse(userEditForm, {"method": "PATCH"})
             .then(async (response) => {
-                let error = await getRequestResultOrRedirect(response);
+                let error = await getRequestErrorOrRedirect(response);
                 if (error)
-                    userEditForm.innerHTML = "<div class='main-error settings-error'> " + error + " </div>";
+                    userEditError.innerHTML = "<div class='main-error settings-error'> " + error + " </div>";
             });
     });
 
@@ -20,9 +20,23 @@ if (userDeleteForm && userDeleteError)
 
         await getFormRequestResponse(userDeleteForm, {"method": "DELETE"})
             .then(async (response) => {
-                let error = await getRequestResultOrRedirect(response);
+                let error = await getRequestErrorOrRedirect(response);
                 if (error)
                     userDeleteError.innerHTML = "<div class='main-error settings-error'> " + error + " </div>";
+            });
+    });
+
+const userSignupForm = document.querySelector("#user_signup_form");
+const userSignupError = document.querySelector("#user_signup_error");
+if (userSignupForm && userSignupError)
+    userSignupForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        await getFormRequestResponse(userSignupForm, {"method": "POST"})
+            .then(async (response) => {
+                let error = await getRequestErrorOrRedirect(response);
+                if (error)
+                    userSignupError.innerHTML = "<div class='main-error card-error'> " + error + " </div>";
             });
     });
 

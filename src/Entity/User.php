@@ -4,18 +4,16 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 
 use App\Repository\UserRepository;
 
-/**
- * @UniqueEntity(fields={"username"}, message="There is already an account with this username.")
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email.")
- */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[UniqueEntity(fields: ["username"], message: "There is already an account with this username.")]
+#[UniqueEntity(fields: ["email"], message: "There is already an account with this email.")]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,15 +21,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: "string", length: 25)]
-    #[Assert\Regex(pattern: "/^[a-zA-Z0-9_]{1,25}$/", message: "Username is not valid.")]
     private $username;
 
     #[ORM\Column(type: "string", length: 50)]
-    #[Assert\Email(message: "Email is not valid.")]
     private $email;
 
     #[ORM\Column(type: "string", length: 255)]
-    #[Assert\Length(min: "8", minMessage: "Password should be at least 8 characters.")]
     private $password;
 
     public function getId(): ?int
@@ -73,6 +68,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    /**
+     * @see EquatableInterface
+     */
+    public function isEqualTo(UserInterface $user): bool
+    {
+        return true;
     }
 
     /**

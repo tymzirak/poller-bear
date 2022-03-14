@@ -1,11 +1,9 @@
 {% extends "wide.html.twig" %}
 
 {% block body %}
-    <form class="theme-box card-box page-wide-cont-s block-middle" action="{{ path("signup_init") }}" method="POST">
+    <form id="user_signup_form" class="theme-box card-box page-wide-cont-s block-middle" action="{{ path("signup_init") }}" method="POST">
         <div class="main-title card-title"> Create a New Account </div>
-        {% if error.message is defined %}
-            <div class="main-error card-error"> {{ error.message }} </div>
-        {% endif %}
+        <div id="user_signup_error"></div>
         <div class="card-cont">
             <input class="main-input card-input block-middle" name="username" placeholder="username" pattern="^[a-zA-Z0-9_]{1,25}$" required>
             <input class="main-input card-input block-middle" name="email" type="email" placeholder="email" required>

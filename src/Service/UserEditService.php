@@ -3,66 +3,46 @@
 namespace App\Service;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use App\Entity\User;
 use App\Service\UserService;
+use App\Service\ViolationService;
+use App\DTO\UserEditRequestDTO;
 
 class UserEditService
 {
-    private UserPasswordHasherInterface $passwordHasher;
     private ManagerRegistry $doctrine;
+    private ViolationService $violationService;
 
     private UserService $userService;
 
-    private $editableProperties = [];
+    private array $editableProperties = [];
 
     public function __construct(
-        UserPasswordHasherInterface $passwordHasher,
         ManagerRegistry $doctrine,
+        ViolationService $violationService,
         UserService $userService
     ) {
-        $this->passwordHasher = $passwordHasher;
         $this->doctrine = $doctrine;
+        $this->violationService = $violationService;
 
         $this->userService = $userService;
     }
 
-    public function getLastUserActionViolation(array $requestData, ?User $user): ?ConstraintViolation
+    public function attemptToEditUser(UserEditRequestDTO $userEditRequestDTO, User $user)
     {
-        if ($violation = $this->getLastUserEditRequestViolation($requestData, $user)) {
-            return $violation;
+        if (!$this->setEditableProperties($userEditRequestDTO, $user)) {
+            throw new BadRequestHttpException("At least one field must be edited.");
         }
 
-        $user = $this->setUserEditProperties($requestData, $user);
+        $user = $this->setUserEditProperties($userEditRequestDTO, $user);
 
-        if ($violation = $this->userService->getLastUserEntityViolation($user)) {
-            return $violation;
+        if ($violation = $this->violationService->getLastViolation($user)) {
+            throw new BadRequestHttpException($violation->getMessage());
         }
 
         $this->editUser($user);
-
-        return null;
-    }
-
-    private function getLastUserEditRequestViolation(array $requestData, ?User $user): ?ConstraintViolation
-    {
-        if (!$user || !$this->setEditableProperties($requestData, $user)) {
-            return new ConstraintViolation("", "", [], null, "", null);
-        }
-
-        if ($this->isEditableProperty("password")) {
-            if ($requestData["password_new"] != $requestData["password_new_repeat"]) {
-                return new ConstraintViolation("Passwords do not match.", "", [], null, "", null);
-            }
-
-            if (!$this->passwordHasher->isPasswordValid($user, $requestData["password_old"])) {
-                return new ConstraintViolation("Password is not valid.", "", [], null, "", null);
-            }
-        }
-
-        return null;
     }
 
     private function editUser(User $user)
@@ -76,18 +56,18 @@ class UserEditService
         $entityManager->flush();
     }
 
-    private function setUserEditProperties(array $requestData, User $user): ?User
+    private function setUserEditProperties(UserEditRequestDTO $userEditRequestDTO, User $user): ?User
     {
         if ($this->isEditableProperty("username")) {
-            $user->setUsername($requestData["username"]);
+            $user->setUsername($userEditRequestDTO->username);
         }
 
         if ($this->isEditableProperty("email")) {
-            $user->setEmail($requestData["email"]);
+            $user->setEmail($userEditRequestDTO->email);
         }
 
         if ($this->isEditableProperty("password")) {
-            $user->setPassword($requestData["password_new"]);
+            $user->setPassword($userEditRequestDTO->passwordNew);
         }
 
         return $user;
@@ -103,21 +83,17 @@ class UserEditService
         $this->editableProperties[] = $property;
     }
 
-    private function setEditableProperties(array $requestData, User $user): array
+    private function setEditableProperties(UserEditRequestDTO $userEditRequestDTO, User $user): array
     {
-        if ($requestData["username"] && $user->getUsername() != $requestData["username"]) {
+        if ($userEditRequestDTO->username && $user->getUsername() != $userEditRequestDTO->username) {
             $this->addEditableProperty("username");
         }
 
-        if ($requestData["email"] && $user->getEmail() != $requestData["email"]) {
+        if ($userEditRequestDTO->email && $user->getEmail() != $userEditRequestDTO->email) {
             $this->addEditableProperty("email");
         }
 
-        if (
-            $requestData["password_old"]
-            && $requestData["password_new"]
-            && $requestData["password_new_repeat"]
-        ) {
+        if ($userEditRequestDTO->passwordOld && $userEditRequestDTO->passwordNew) {
             $this->addEditableProperty("password");
         }
 
