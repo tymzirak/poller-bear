@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\User;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use App\Entity\User;
-use App\Service\UserService;
-use App\Service\ViolationService;
-use App\DTO\UserEditRequestDTO;
+use App\Service\User\UserService;
+use App\Service\Violation\ViolationService;
+use App\DTO\User\UserEditRequestDTO;
 
 class UserEditService
 {

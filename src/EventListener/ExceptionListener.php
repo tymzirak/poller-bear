@@ -12,7 +12,6 @@ class ExceptionListener
     public function onKernelException(ExceptionEvent $event)
     {
         $exception = $event->getThrowable();
-
         if (!$exception instanceof BadRequestHttpException) {
             return null;
         }

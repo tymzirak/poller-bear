@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Violation;
 
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\ConstraintViolation;

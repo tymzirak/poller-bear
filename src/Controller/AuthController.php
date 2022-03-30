@@ -8,8 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-use App\Service\UserSignupService;
-use App\DTO\UserSignupRequestDTO;
+use App\Service\User\UserSignupService;
+use App\DTO\User\UserSignupRequestDTO;
 
 class AuthController extends AbstractController
 {
@@ -40,9 +40,10 @@ class AuthController extends AbstractController
     {
         try {
             $this->userSignupService->attemptToSignupUser($request);
+
             return $this->redirect($this->generateUrl("login"));
         } catch (BadRequestHttpException $error) {
-            return new Response($error->getMessage());
+            return new Response($error->getMessage(), 403);
         }
     }
 

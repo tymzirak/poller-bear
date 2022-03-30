@@ -1,11 +1,11 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\User;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Request;
 
-use App\DTO\RequestDTOInterface;
+use App\Interface\DTO\RequestDTOInterface;
 
 class UserSignupRequestDTO implements RequestDTOInterface
 {

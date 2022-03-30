@@ -1,12 +1,12 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\User;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\HttpFoundation\Request;
 
-use App\DTO\RequestDTOInterface;
+use App\Interface\DTO\RequestDTOInterface;
 
 class UserDeleteRequestDTO implements RequestDTOInterface
 {

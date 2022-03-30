@@ -8,20 +8,17 @@ const getFormRequestResponse = async (form, options={"method": "POST"}) => {
     return response;
 };
 
-const parseRequestResult = async (response, option={"format": "text"}) => {
-    let result = "";
-    if (option.format == "text") result = await response.text();
-    else if (option.format == "json") result = await response.json();
-
-    return result;
+const parseRequestResult = async (response, format="text") => {
+    if (format == "json") return await response.json();
+    else return await response.text();
 }
 
-const getRequestError = async (response, option={"format": "text"}) => {
-    if (!response.ok) return parseRequestResult(response, option);
+const getRequestError = async (response, format="text") => {
+    if (!response.ok) return await parseRequestResult(response, format);
 }
 
-const getRequestErrorOrRedirect = async (response, option={"format": "text"}) => {
-    if (!response.redirected) return await getRequestError(response, option);
+const getRequestErrorOrRedirect = async (response, format="text") => {
+    if (!response.redirected) return await getRequestError(response, format);
 
     window.location.href = response.url;
 }

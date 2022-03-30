@@ -7,10 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-use App\Service\UserEditService;
-use App\Service\UserDeleteService;
-use App\DTO\UserEditRequestDTO;
-use App\DTO\UserDeleteRequestDTO;
+use App\Service\User\UserEditService;
+use App\Service\User\UserDeleteService;
+use App\DTO\User\UserEditRequestDTO;
+use App\DTO\User\UserDeleteRequestDTO;
 
 class UserController extends AbstractController
 {
@@ -39,20 +39,18 @@ class UserController extends AbstractController
     {
         try {
             $this->userEditService->attemptToEditUser($request, $this->getUser());
+
             return $this->redirect($this->generateUrl("settings"));
         } catch (BadRequestHttpException $error) {
-            return new Response($error->getMessage());
+            return new Response($error->getMessage(), 403);
         }
     }
 
     #[Route("/user/delete", name: "user_delete", methods: ["DELETE"])]
     public function userDelete(UserDeleteRequestDTO $request) : Response
     {
-        try {
-            $this->userDeleteService->deleteUser($this->getUser());
-            return $this->redirect($this->generateUrl("logout"));
-        } catch (\Exception $error) {
-            return new Response("Input error.");
-        }
+        $this->userDeleteService->deleteUser($this->getUser());
+
+        return $this->redirect($this->generateUrl("logout"));
     }
 }
