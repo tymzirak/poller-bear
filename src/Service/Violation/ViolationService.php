@@ -6,8 +6,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 
-use App\Entity\User;
-
 class ViolationService
 {
     private UserPasswordHasherInterface $passwordHasher;
