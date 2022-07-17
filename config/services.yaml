@@ -19,7 +19,6 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-            - '../src/Tests/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -30,6 +29,10 @@ services:
         tags:
             - { name: controller.request_value_resolver, priority: 50 }
 
-    App\EventListener\ExceptionListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception }
+    App\EventSubscriber\Exception\ExceptionSubscriber:
+            tags:
+                - { name: kernel.exception_subscriber, event: kernel.exception }
+
+    App\EventSubscriber\Token\CsrfTokenRequestSubscriber:
+            tags:
+                - { name: kernel.csrf_token_request_subscriber, event: kernel.request }

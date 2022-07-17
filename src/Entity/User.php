@@ -2,51 +2,44 @@
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 
-use App\Repository\UserRepository;
-
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ["username"], message: "There is already an account with this username.")]
 #[UniqueEntity(fields: ["email"], message: "There is already an account with this email.")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: "string", length: 25)]
-    private $username;
-
-    #[ORM\Column(type: "string", length: 50)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $email;
 
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\OneToOne(targetEntity: UserInformation::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
+    private $userInformation;
+
+    #[ORM\Column(type: 'string', length: 1500)]
     private $password;
+
+    #[ORM\Column(type: "json")]
+    private $roles = [];
+
+    #[ORM\Column(type: "boolean")]
+    private $isVerified = false;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -58,7 +51,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getUserInformation(): UserInformation
+    {
+        return $this->userInformation;
+    }
+
+    public function setUserInformation(UserInformation $userInformation): self
+    {
+        $this->userInformation = $userInformation;
+
+        return $this;
+    }
+
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -67,6 +72,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
     {
         $this->password = $password;
 
+        return $this;
+    }
+
+    public function getIsVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
         return $this;
     }
 
@@ -83,7 +99,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
      */
     public function getRoles(): array
     {
-        return ["ROLE_USER"];
+        $roles = $this->roles;
+
+        $roles[] = "ROLE_USER";
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     /**
@@ -101,6 +128,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string) $this->email;
     }
 }

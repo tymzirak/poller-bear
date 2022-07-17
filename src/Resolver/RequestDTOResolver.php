@@ -12,7 +12,7 @@ use App\Interface\DTO\RequestDTOInterface;
 
 class RequestDTOResolver implements ArgumentValueResolverInterface
 {
-    private $validator;
+    private ValidatorInterface $validator;
 
     public function __construct(ValidatorInterface $validator)
     {

@@ -2,58 +2,54 @@
 
 namespace App\Service\User;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 use App\Entity\User;
-use App\Service\User\UserService;
+use App\Repository\UserRepository;
 use App\Service\Violation\ViolationService;
-use App\DTO\User\UserSignupRequestDTO;
+use App\Interface\DTO\User\UserSignupRequestDTOInterface;
 
 class UserSignupService
 {
-    private ManagerRegistry $doctrine;
+    private UserPasswordHasherInterface $passwordHasher;
+
+    private UserRepository $userRepository;
     private ViolationService $violationService;
 
-    private UserService $userService;
-
     public function __construct(
-        ManagerRegistry $doctrine,
-        ViolationService $violationService,
-        UserService $userService
+        UserPasswordHasherInterface $passwordHasher, 
+        UserRepository $userRepository,
+        ViolationService $violationService
     ) {
-        $this->doctrine = $doctrine;
-        $this->violationService = $violationService;
+        $this->passwordHasher = $passwordHasher;
 
-        $this->userService = $userService;
+        $this->userRepository = $userRepository;
+        $this->violationService = $violationService;
     }
 
-    public function attemptToSignupUser(UserSignupRequestDTO $userSignupRequestDTO)
+    public function signupUser(UserSignupRequestDTOInterface $userSignupRequest): User 
     {
-        $user = new User();
-        $user = $this->setUserSignupProperties($userSignupRequestDTO, $user);
+        $user = $this->setUserProperties($userSignupRequest, new User());
 
         if ($violation = $this->violationService->getLastViolation($user)) {
             throw new BadRequestHttpException($violation->getMessage());
         }
 
-        $this->signupUser($user);
+        $this->userRepository->add($user, true);
+
+        return $user;
     }
 
-    private function signupUser(User $user)
+    private function setUserProperties(UserSignupRequestDTOInterface $userSignupRequest, User $user): User 
     {
-        $user = $this->userService->hashUserPassword($user);
-
-        $entityManager = $this->doctrine->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
-    }
-
-    private function setUserSignupProperties(UserSignupRequestDTO $userSignupRequestDTO, User $user): User
-    {
-        $user->setUsername($userSignupRequestDTO->username);
-        $user->setEmail($userSignupRequestDTO->email);
-        $user->setPassword($userSignupRequestDTO->password);
+        $user->setEmail($userSignupRequest->getEmail());
+        $user->setPassword(
+            $this->passwordHasher->hashPassword(
+                $user,
+                $userSignupRequest->getPassword()
+            )
+        );
 
         return $user;
     }

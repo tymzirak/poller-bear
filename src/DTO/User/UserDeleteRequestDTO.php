@@ -2,25 +2,36 @@
 
 namespace App\DTO\User;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
-use Symfony\Component\HttpFoundation\Request;
 
 use App\Interface\DTO\RequestDTOInterface;
 
 class UserDeleteRequestDTO implements RequestDTOInterface
 {
-    #[SecurityAssert\UserPassword(message: "Wrong password.")]
-    public string $password;
+    #[Assert\Length(min: "8", minMessage: "Password should be at least 8 characters.")]
+    #[SecurityAssert\UserPassword(message: "Invalid password.")]
+    private string $password;
 
     #[Assert\EqualTo(propertyPath: "password", message: "Passwords do not match.")]
-    public string $passwordRepeat;
+    private string $passwordRepeat;
 
     public function __construct(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
         $this->password = $data["password"];
-        $this->passwordRepeat = $data["password_repeat"];
+        $this->passwordRepeat = $data["password-repeat"];
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function getPasswordRepeat(): string
+    {
+        return $this->passwordRepeat;
     }
 }

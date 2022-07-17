@@ -3,26 +3,35 @@
 namespace App\Service\User;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
-use App\Entity\User;
+use App\Repository\UserRepository;
+use App\Service\Email\EmailVerifyService;
+use App\DTO\Email\EmailVerifyRequestDTO;
 
 class UserDeleteService
 {
     private TokenStorageInterface $tokenStorage;
-    private ManagerRegistry $doctrine;
 
-    public function __construct(TokenStorageInterface $tokenStorage, ManagerRegistry $doctrine) {
+    private UserRepository $userRepository;
+    private EmailVerifyService $emailVerifyService;
+
+    public function __construct(
+        TokenStorageInterface $tokenStorage, 
+        UserRepository $userRepository, 
+        EmailVerifyService $emailVerifyService
+    ) {
         $this->tokenStorage = $tokenStorage;
-        $this->doctrine = $doctrine;
+
+        $this->userRepository = $userRepository;
+        $this->emailVerifyService = $emailVerifyService;
     }
 
-    public function deleteUser(User $user)
+    public function deleteUser(EmailVerifyRequestDTO $emailVerifyRequest) 
     {
-        $this->tokenStorage->setToken(null);
+        $user = $this->emailVerifyService->verifyEmail($emailVerifyRequest);
 
-        $entityManager = $this->doctrine->getManager();
-        $entityManager->remove($user);
-        $entityManager->flush();
+        $this->userRepository->remove($user, true);
+
+        $this->tokenStorage->setToken(null);
     }
 }

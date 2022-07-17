@@ -11,7 +11,8 @@ class ViolationService
     private UserPasswordHasherInterface $passwordHasher;
     private ValidatorInterface $validator;
 
-    public function __construct(ValidatorInterface $validator) {
+    public function __construct(ValidatorInterface $validator) 
+    {
         $this->validator = $validator;
     }
 

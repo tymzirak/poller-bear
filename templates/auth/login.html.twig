@@ -1,20 +1,7 @@
 {% extends "wide.html.twig" %}
 
 {% block body %}
-    <form class="theme-box card-box page-wide-cont-s block-middle" action="{{ path("login") }}" method="POST">
-        <div class="main-title card-title"> Login to Your Account </div>
-        {% if error.message is defined %}
-            <div class="main-error card-error"> {{ error.message }} </div>
-        {% endif %}
-        <div class="card-cont">
-            <input class="main-input card-input block-middle" name="username" value="{{ last_username }}" placeholder="username" pattern="^[a-zA-Z0-9_]{1,25}$" required>
-            <input class="main-input card-input block-middle" name="password" type="password" placeholder="password" required>
-        </div>
-        <div class="card-info-text-cont">
-            <a class="main-info-text" href="{{ path("signup") }}"> Create account </a>
-            <a class="main-info-text" href="{{ path("password_reset") }}"> Forgot password? </a>
-        </div>
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token("authenticate") }}">
-        <button class="main-button card-button" type="submit" name="submit"> Login </button>
-    </form>
+
+    {{ include("layouts/auth/login_section.html.twig") }}
+    
 {% endblock %}
