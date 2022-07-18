@@ -1,17 +1,23 @@
 const getFormRequestResponse = async (form, options={"method": "POST"}) => {
     let formData = new FormData(form);
-    let formDataJSON = JSON.stringify(Object.fromEntries(formData));
 
-    options = Object.assign(options, {"body": formDataJSON});
+    if (options.format == "json") {
+        formData = JSON.stringify(Object.fromEntries(formData));
+    }
+
+    options = Object.assign(options, {"body": formData});
     let response = await fetch(form.action, options);
 
     return response;
 };
 
 const parseRequestResult = async (response, format="text") => {
-    if (format == "json") return await response.json();
-    else return await response.text();
-}
+    let result = "";
+    if (format == "text") result = await response.text();
+    else if (format == "json") result = await response.json();
+
+    return result;
+};
 
 const getRequestError = async (response, format="text") => {
     if (!response.ok) return await parseRequestResult(response, format);

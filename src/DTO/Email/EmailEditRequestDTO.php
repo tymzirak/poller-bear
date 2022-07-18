@@ -10,13 +10,13 @@ use App\Validator\User as UserAssert;
 class EmailEditRequestDTO implements RequestDTOInterface
 {
     #[UserAssert\UserEmailAvailable]
-    private string $email;
+    private ?string $email;
 
     public function __construct(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
-        $this->email = $data["email"];
+        $this->email = $data["email"] ?? null;
     }
 
     public function getEmail(): string

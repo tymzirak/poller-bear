@@ -11,22 +11,22 @@ use App\Validator\User as UserAssert;
 class UserSignupRequestDTO implements RequestDTOInterface
 {
     #[UserAssert\UserEmailAvailable]
-    private string $email;
+    private ?string $email;
 
     #[Assert\Length(min: "8", minMessage: "Password should be at least 8 characters.")]
     #[Assert\NotCompromisedPassword(message: "This password has been leaked. Please use another password.")]
-    private string $password;
+    private ?string $password;
 
     #[Assert\EqualTo(propertyPath: "password", message: "Passwords do not match.")]
-    private string $passwordRepeat;
+    private ?string $passwordRepeat;
 
     public function __construct(Request $request) 
     {
         $data = json_decode($request->getContent(), true);
 
-        $this->email = $data["email"];
-        $this->password = $data["password"];
-        $this->passwordRepeat = $data["password-repeat"];
+        $this->email = $data["email"] ?? null;
+        $this->password = $data["password"] ?? null;
+        $this->passwordRepeat = $data["password-repeat"] ?? null;
     }
 
     /**

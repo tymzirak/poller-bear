@@ -12,22 +12,22 @@ class UserEditPasswordRequestDTO implements RequestDTOInterface
 {
     #[Assert\Length(min: "8", minMessage: "Password should be at least 8 characters.")]
     #[SecurityAssert\UserPassword(message: "Invalid old password.")]
-    private string $passwordOld;
+    private ?string $passwordOld;
 
     #[Assert\Length(min: "8", minMessage: "Password should be at least 8 characters.")]
     #[Assert\NotCompromisedPassword(message: "This password has been leaked. Please use another password.")]
-    private string $passwordNew;
+    private ?string $passwordNew;
 
     #[Assert\EqualTo(propertyPath: "passwordNew", message: "Passwords do not match.")]
-    private string $passwordNewRepeat;
+    private ?string $passwordNewRepeat;
 
     public function __construct(Request $request)
     {
         $data = json_decode($request->getContent(), true);
         
-        $this->passwordOld = $data["password-old"];
-        $this->passwordNew = $data["password-new"];
-        $this->passwordNewRepeat = $data["password-new-repeat"];
+        $this->passwordOld = $data["password-old"] ?? null;
+        $this->passwordNew = $data["password-new"] ?? null;
+        $this->passwordNewRepeat = $data["password-new-repeat"] ?? null;
     }
 
     public function getPasswordOld(): string

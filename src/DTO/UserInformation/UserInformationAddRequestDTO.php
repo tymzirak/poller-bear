@@ -10,11 +10,13 @@ use App\Validator\UserInformation as UserInformationAssert;
 class UserInformationAddRequestDTO implements RequestDTOInterface
 {
     #[UserInformationAssert\UserInformationName]
-    private string $username;
+    private ?string $username;
 
     public function __construct(Request $request)
     {
-        $this->username = $request->request->get("username");
+        $data = json_decode($request->getContent(), true);
+
+        $this->username = $data["username"] ?? null;
     }
 
     public function getUsername(): string

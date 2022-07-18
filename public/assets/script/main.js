@@ -4,7 +4,7 @@ if (userEditInformationForm && userEditInformationError)
     userEditInformationForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        await getFormRequestResponse(userEditInformationForm, {"method": "PATCH"})
+        await getFormRequestResponse(userEditInformationForm, {"method": "PATCH", "format": "json"})
             .then(async (response) => {
                 let error = await getRequestErrorOrRedirect(response);
                 if (error)
@@ -18,7 +18,7 @@ if (userSignupForm && userSignupError)
     userSignupForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        await getFormRequestResponse(userSignupForm, {"method": "POST"})
+        await getFormRequestResponse(userSignupForm, {"method": "POST", "format": "json"})
             .then(async (response) => {
                 let error = await getRequestErrorOrRedirect(response);
                 if (error)
@@ -32,7 +32,7 @@ if (userResetPasswordForm && userResetPasswordError)
     userResetPasswordForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        await getFormRequestResponse(userResetPasswordForm, {"method": "POST"})
+        await getFormRequestResponse(userResetPasswordForm, {"method": "POST", "format": "json"})
             .then(async (response) => {
                 let error = await getRequestErrorOrRedirect(response);
                 if (error)
@@ -40,14 +40,13 @@ if (userResetPasswordForm && userResetPasswordError)
             });
     });
 
-
 const userEditPasswordForm = document.querySelector("#user-edit-password-form");
 const userEditPasswordError = document.querySelector("#user-edit-password-error");
 if (userEditPasswordForm && userEditPasswordError)
     userEditPasswordForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        await getFormRequestResponse(userEditPasswordForm, {"method": "PATCH"})
+        await getFormRequestResponse(userEditPasswordForm, {"method": "PATCH", "format": "json"})
             .then(async (response) => {
                 let error = await getRequestErrorOrRedirect(response);
                 if (error)
@@ -61,7 +60,7 @@ if (userEditEmailForm && userEditEmailError)
     userEditEmailForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        await getFormRequestResponse(userEditEmailForm, {"method": "PATCH"})
+        await getFormRequestResponse(userEditEmailForm, {"method": "PATCH", "format": "json"})
             .then(async (response) => {
                 let error = await getRequestErrorOrRedirect(response);
                 if (error)
@@ -75,7 +74,7 @@ if (userDeleteForm && userDeleteError)
     userDeleteForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        await getFormRequestResponse(userDeleteForm, {"method": "DELETE"})
+        await getFormRequestResponse(userDeleteForm, {"method": "DELETE", "format": "json"})
             .then(async (response) => {
                 let error = await getRequestErrorOrRedirect(response);
                 if (error)

@@ -8,7 +8,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\Violation\ViolationService;
-use App\Interface\DTO\User\UserSignupRequestDTOInterface;
+use App\DTO\User\UserSignupRequestDTO;
 
 class UserSignupService
 {
@@ -28,7 +28,7 @@ class UserSignupService
         $this->violationService = $violationService;
     }
 
-    public function signupUser(UserSignupRequestDTOInterface $userSignupRequest): User 
+    public function signupUser(UserSignupRequestDTO $userSignupRequest): User 
     {
         $user = $this->setUserProperties($userSignupRequest, new User());
 
@@ -41,7 +41,7 @@ class UserSignupService
         return $user;
     }
 
-    private function setUserProperties(UserSignupRequestDTOInterface $userSignupRequest, User $user): User 
+    private function setUserProperties(UserSignupRequestDTO $userSignupRequest, User $user): User 
     {
         $user->setEmail($userSignupRequest->getEmail());
         $user->setPassword(
