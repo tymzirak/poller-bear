@@ -2,13 +2,25 @@
 
 namespace App\EventSubscriber\Exception;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\InvalidSignatureException;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\ExpiredSignatureException;
 use Symfony\Component\HttpFoundation\Response;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
+    private UrlGeneratorInterface $urlGenerator;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
+
     public static function getSubscribedEvents()
     {
        return [
@@ -19,21 +31,36 @@ class ExceptionSubscriber implements EventSubscriberInterface
     public function checkException(ExceptionEvent $event)
     {
         $exception = $event->getThrowable();
-        if (!$exception instanceof BadRequestHttpException) {
-            return null;
+
+        if ($exception instanceof NotFoundHttpException) {
+            $event->setResponse(
+                new RedirectResponse(
+                    $this->urlGenerator->generate("error", ["error" => "404 Not Found."])
+                )
+            );
         }
 
-        preg_match("/(:\s.+\.)/", $exception->getMessage(), $message);
-        if (!$message) {
-            preg_match("/(.+\.)/", $exception->getMessage(), $message);
-    
+        if ($exception instanceof InvalidSignatureException || $exception instanceof ExpiredSignatureException) {
+            $event->setResponse(
+                new RedirectResponse(
+                    $this->urlGenerator->generate("error", ["error" => "Invalid validation token."])
+                )
+            );
+        }
+
+        if ($exception instanceof BadRequestHttpException) {
+            preg_match("/(:\s.+\.)/", $exception->getMessage(), $message);
             if (!$message) {
-                return null;
-            }
-        }
+                preg_match("/(.+\.)/", $exception->getMessage(), $message);
         
-        $message = trim($message[0], ":\n ");
+                if (!$message) {
+                    return null;
+                }
+            }
+            
+            $message = trim($message[0], ":\n ");
 
-        $event->setResponse(new Response($message));
+            $event->setResponse(new Response($message));
+        }
     }
 }

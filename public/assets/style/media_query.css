@@ -5,9 +5,19 @@
     }
 
     .page-temp-main { width: 95%; }
+
+    .error {
+        margin-top: 100px;
+    }
 }
 
 @media screen and (max-width: 50rem) {
+    .error {
+        margin-top: 50px;
+        
+        font-size: var(--font-l);
+    }
+
     .header-logo {
         width: 30px;
         margin: calc(-1 * var(--space-m));

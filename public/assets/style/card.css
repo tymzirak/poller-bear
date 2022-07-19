@@ -27,7 +27,7 @@
     text-align: center;
 }
 
-.card-error {
+.card-message {
     padding: var(--space-s) 30px;
 
     text-align: center;

@@ -1,9 +1,7 @@
 <form class="theme-box card-box page-wide-cont-s block-middle" action="{{ path("login_admin") }}" method="POST">
     <div class="main-title card-title"> Admin Login </div>
 
-    {% if error.message is defined %}
-        <div class="main-error card-error"> {{ error.message }} </div>
-    {% endif %}
+    {{ include("layouts/message/form_error.html.twig") }}
 
     <div class="card-cont">
         <input class="main-input card-input block-middle" name="username" value="{{ last_username }}" placeholder="username" pattern="^[a-zA-Z0-9_]{1,25}$" required>

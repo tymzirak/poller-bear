@@ -88,7 +88,12 @@ a {
     border-bottom: 2px var(--theme-color-d) solid;
 }
 
-.main-error { font-weight: 100; }
+.main-error { font-weight: 900; }
+
+.main-success { 
+    font-weight: 100; 
+    color: var(--theme-color);
+}
 
 .main-info-text {
     display: inline-block;

@@ -1,9 +1,7 @@
 <form class="theme-box card-box page-wide-cont-s block-middle" action="{{ path("login") }}" method="POST">
     <div class="main-title card-title"> Login to Your Account </div>
 
-    {% if error.message is defined %}
-        <div class="main-error card-error"> {{ error.message }} </div>
-    {% endif %}
+    {{ include("layouts/message/form_error.html.twig") }}
 
     <div class="card-cont">
         <input class="main-input card-input block-middle" name="email" value="{{ last_username }}" placeholder="email" type="email" required>
