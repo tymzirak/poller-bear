@@ -8,12 +8,14 @@
         <input class="main-input card-input block-middle" name="password" type="password" placeholder="password" required>
     </div>
 
+    <input type="hidden" name="csrf-token" value="{{ csrf_token("csrf-token") }}">
+
+    {{ include("layouts/captcha/captcha_form.html.twig") }}
+
     <div class="card-info-text-cont">
         <a class="main-info-text" href="{{ path("signup") }}"> Create account </a>
         <a class="main-info-text" href="{{ path("password_reset") }}"> Forgot password? </a>
     </div>
-    
-    <input type="hidden" name="csrf-token" value="{{ csrf_token("csrf-token") }}">
 
     <button class="main-button card-button" type="submit" name="submit"> Login </button>
 </form>

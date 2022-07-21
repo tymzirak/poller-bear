@@ -26,7 +26,7 @@ class UserVerifiedByEmailValidator extends ConstraintValidator
 
         if (
             !filter_var($value, FILTER_VALIDATE_EMAIL)
-            || !$user = $this->userRepository->findOneBy(["email" => $value])
+            || empty($user = $this->userRepository->findOneBy(["email" => $value]))
             || !$user->getIsVerified()
         ) {
             $this->context->buildViolation($constraint->message)

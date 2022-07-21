@@ -22,7 +22,7 @@ if (userSignupForm && userSignupError)
             .then(async (response) => {
                 let error = await getRequestErrorOrRedirect(response);
                 if (error)
-                    userSignupError.innerHTML = "<div class='main-error card-error'> " + error + " </div>";
+                    userSignupError.innerHTML = "<div class='main-error card-message'> " + error + " </div>";
             });
     });
 
@@ -36,7 +36,7 @@ if (userResetPasswordForm && userResetPasswordError)
             .then(async (response) => {
                 let error = await getRequestErrorOrRedirect(response);
                 if (error)
-                    userResetPasswordError.innerHTML = "<div class='main-error card-error'> " + error + " </div>";
+                    userResetPasswordError.innerHTML = "<div class='main-error card-message'> " + error + " </div>";
             });
     });
 

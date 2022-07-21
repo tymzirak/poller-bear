@@ -13,6 +13,7 @@ use App\Service\Email\EmailSendVerificationService;
 use App\DTO\User\UserSignupRequestDTO;
 use App\DTO\UserInformation\UserInformationAddRequestDTO;
 use App\DTO\Email\EmailVerifyRequestDTO;
+use App\DTO\Captcha\CaptchaRequestDTO;
 
 class UserSignupController extends AbstractController
 {
@@ -49,6 +50,7 @@ class UserSignupController extends AbstractController
 
     #[Route("/signup/init", name: "signup_init", methods: ["POST"])]
     public function signupCustomerInit(
+        CaptchaRequestDTO $captchaRequest,
         UserSignupRequestDTO $userSignupRequest,
         UserInformationAddRequestDTO $userInformationAddRequest,
     ): Response {

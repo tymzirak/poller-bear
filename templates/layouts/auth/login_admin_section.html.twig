@@ -10,5 +10,7 @@
 
     <input type="hidden" name="csrf-token" value="{{ csrf_token("csrf-token") }}">
 
+    {{ include("layouts/captcha/captcha_form.html.twig") }}
+
     <button class="main-button card-button" type="submit" name="submit"> Login </button>
 </form>

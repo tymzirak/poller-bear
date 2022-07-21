@@ -10,6 +10,7 @@ use App\Service\User\UserSendResetPasswordVerificationService;
 use App\Service\User\UserResetPasswordService;
 use App\DTO\User\UserSendPasswordResetRequestDTO;
 use App\DTO\Email\EmailVerifyRequestDTO;
+use App\DTO\Captcha\CaptchaRequestDTO;
 
 class UserResetPasswordController extends AbstractController
 {
@@ -32,6 +33,7 @@ class UserResetPasswordController extends AbstractController
 
     #[Route("/password/reset/init", name: "password_reset_init", methods: ["POST"])]
     public function passwordResetInit(
+        CaptchaRequestDTO $captchaRequest,
         UserSendPasswordResetRequestDTO $userSendPasswordResetRequest
     ): Response {
         $this->userSendResetPasswordVerificationService->sendUserResetPasswordVerification(

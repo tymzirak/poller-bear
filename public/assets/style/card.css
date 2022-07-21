@@ -28,7 +28,7 @@
 }
 
 .card-message {
-    padding: var(--space-s) 30px;
+    padding: var(--space-m) 30px;
 
     text-align: center;
 }

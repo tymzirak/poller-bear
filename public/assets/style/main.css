@@ -88,7 +88,10 @@ a {
     border-bottom: 2px var(--theme-color-d) solid;
 }
 
-.main-error { font-weight: 900; }
+.main-error {
+    font-weight: 900;
+    color: var(--theme-color-d);
+}
 
 .main-success { 
     font-weight: 100; 
