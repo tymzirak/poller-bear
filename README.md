@@ -24,7 +24,7 @@
 
 ```
 ###> doctrine/doctrine-bundle ###
-DATABASE_URL="mysql://YOUR_USERNAME:YOUR_PASSWORD@127.0.0.1:3306/poller_bear?&charset=utf8mb4"
+DATABASE_URL="mysql://YOUR_USERNAME:YOUR_PASSWORD@127.0.0.1:3306/temiz_getir?&charset=utf8mb4"
 ###< doctrine/doctrine-bundle ###
 ```
 
@@ -36,7 +36,7 @@ DATABASE_URL="mysql://YOUR_USERNAME:YOUR_PASSWORD@127.0.0.1:3306/poller_bear?&ch
 
 - Change the values according to your email DSN settings, in the **.env** (or **.env.local**) file.
 
-> [More Info Here](https://docs.hcaptcha.com/#verify-the-user-response-server-side)
+> [More Info Here](https://symfony.com/doc/current/mailer.html)
 
 ```
 ###> symfony/mailer ###
@@ -50,7 +50,7 @@ MAILER_DSN=smtp://YOUR_USERNAME:YOUR_PASSWORD@smtp.example.com:2525/?encryption=
 
 - Change the value according to your hCaptcha secret key, in the **.env** (or **.env.local**) file.
 
-> [More Info Here](https://symfony.com/doc/current/mailer.html)
+> [More Info Here](https://docs.hcaptcha.com/#verify-the-user-response-server-side)
 
 ```
 CAPTCHA_SECRET=YOUR_HCAPTCHA_SECRET_KEY
