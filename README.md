@@ -14,11 +14,13 @@
 
 > Run ```php composer install``` in the project directory
 
+> Copy the **.env** file to **.env.local**
+
 ---
 
 **2. Database Setup**
 
-- Change the values according to your database settings, in the **.env** (or **.env.local**) file.
+- Change the values according to your database settings, in the **.env.local** file.
 
 > [More Info Here](https://symfony.com/doc/current/doctrine.html)
 
@@ -34,7 +36,7 @@ DATABASE_URL="mysql://YOUR_USERNAME:YOUR_PASSWORD@127.0.0.1:3306/temiz_getir?&ch
 
 **3. Email Setup**
 
-- Change the values according to your email DSN settings, in the **.env** (or **.env.local**) file.
+- Change the values according to your email DSN settings, in the **.env.local** file.
 
 > [More Info Here](https://symfony.com/doc/current/mailer.html)
 
@@ -48,7 +50,7 @@ MAILER_DSN=smtp://YOUR_USERNAME:YOUR_PASSWORD@smtp.example.com:2525/?encryption=
 
 **3. Captcha Setup**
 
-- Change the value according to your hCaptcha secret key, in the **.env** (or **.env.local**) file.
+- Change the value according to your hCaptcha secret key, in the **.env.local** file.
 
 > [More Info Here](https://docs.hcaptcha.com/#verify-the-user-response-server-side)
 
